@@ -17,6 +17,36 @@ const messageList = ref([
     rate: null,
   },
   {
+    message: '什么叫意难平啊？',
+    from: 'me',
+    rate: null,
+  },
+  {
+    message: '什么叫意难平啊？',
+    from: 'me',
+    rate: null,
+  },
+  {
+    message: '什么叫意难平啊？',
+    from: 'me',
+    rate: null,
+  },
+  {
+    message: '什么叫意难平啊？',
+    from: 'me',
+    rate: null,
+  },
+  {
+    message: '什么叫意难平啊？',
+    from: 'me',
+    rate: null,
+  },
+  {
+    message: '什么叫意难平啊？',
+    from: 'me',
+    rate: null,
+  },
+  {
     message:
       '意难平，出自宋朝孙应时的《阻风泊归舟游净众寺》：“愁边动寒角，夜久意难平”，现演变成一个网络流行语，多指不能释怀、放不下，不甘心的感觉，念念不忘却没有回响。常常被用于形容令人遗憾惋惜的cp，渐渐沦为了一个常见的“虐梗”。',
     from: 'you',
@@ -29,13 +59,13 @@ const messageList = ref([
   <div class="app-box flex justify-center text-white">
     <div class="app-wrapper">
       <Header></Header>
-      <div class="container mt-[20px]">
-        <div class="tab grid grid-cols-12 gap-x-5 gap-y-6">
+      <div class="container mt-[30px]">
+        <div class="tab grid grid-cols-10 gap-x-5 gap-y-6">
           <div
             v-for="(item, index) in tabList"
             :key="index"
             :class="[
-              `h-[120px] relative w-[96px] flex justify-center items-center flex-col cursor-pointer ${
+              `h-[140] relative w-[112px] flex justify-center items-center flex-col cursor-pointer ${
                 activeTab === item.value ? 'active-tab' : 'normal-tab'
               }`,
             ]"
@@ -47,12 +77,12 @@ const messageList = ref([
             ></div>
             <div class="mt-[14px]">{{ item.label }}</div>
           </div>
-          <div class="h-[120px] relative w-[96px] flex justify-center items-center flex-col ml-[-25px] cursor-pointer">
-            <img src="@/assets/more-tab.png" class="h-[120px]" alt="" />
-            <img src="@/assets/next.png" alt="" class="absolute top-[90px] mx-auto w-[9px]" />
+          <div class="h-[140] relative w-[112px] flex justify-center items-center flex-col ml-[-25px] cursor-pointer">
+            <img src="@/assets/more-tab.png" class="h-[140px]" alt="" />
+            <img src="@/assets/next.png" alt="" class="absolute top-[70px] mx-auto w-[9px]" />
           </div>
         </div>
-        <div class="mt-[30px] flex">
+        <div class="mt-[40px] flex">
           <div
             class="w-[120px] h-[40px] rounded-3xl bg-gradient-to-b from-[#00FFF0] to-[#028FF2] flex justify-center items-center cursor-pointer"
           >
@@ -63,8 +93,8 @@ const messageList = ref([
           </div>
         </div>
       </div>
-      <div class="relative chatbox mt-[24px] overflow-hidden w-full p-[48px] h-[400px] overflow-y-auto">
-        <div>
+      <div class="relative chatbox mt-[30px] overflow-hidden w-full pt-[48px] overflow-y-auto">
+        <div class="px-[48px]">
           <div class="message-box">
             <div v-for="(item, index) in messageList" :key="index" class="flex items-center mb-[30px]">
               <div>
@@ -81,7 +111,9 @@ const messageList = ref([
               <el-rate v-model="item.rate" class="ml-[20px]" void-color="#00FFF0" />
             </div>
           </div>
-          <div class="relative mt-[40px]">
+        </div>
+        <div class="sticky bottom-0 z-10 input-box">
+          <div class="relative">
             <el-input v-model="questionMess" class="question" size="small" placeholder="输入..." />
             <img src="@/assets/telegram.svg" alt="" class="absolute right-[40px] top-[25px] w-[30px] cursor-pointer" />
           </div>
@@ -106,6 +138,7 @@ const messageList = ref([
   border: 4px solid;
   border-color: #00fff0;
   border-left: 4px solid linear-gradient(to bottom, #028ff2, #00fff0);
+  height: calc(100vh - 76px - 140px - 30px - 40px - 40px - 30px - 60px);
 }
 .question {
   border-radius: 16px !important;
@@ -115,6 +148,14 @@ const messageList = ref([
   }
   .el-input__wrapper {
     border-radius: 16px !important;
+  }
+}
+.input-box {
+  width: 100%;
+  padding-bottom: 48px;
+  & > div {
+    width: calc(100% - 96px);
+    margin: auto;
   }
 }
 </style>

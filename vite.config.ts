@@ -12,16 +12,6 @@ import autoprefixer from 'autoprefixer'
 import eslintPlugin from 'vite-plugin-eslint'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
-const envStr = 'test'
-
-const evnPath = `http://gongyi-${envStr}.zhcslyg.com`
-
-const pathMap = {
-  online: 'https://online.zhcslyg.com',
-  test: evnPath,
-  pre: evnPath,
-}
-
 export default defineConfig({
   base: '/chatgpt/',
   publicDir: '/chatgpt',
@@ -29,19 +19,6 @@ export default defineConfig({
     alias: {
       '@/': `${path.resolve(__dirname, './src')}/`,
     },
-  },
-  server: {
-    strictPort: false,
-    port: 3020,
-    host: true,
-    proxy: {
-      '/api': {
-        target: pathMap[envStr],
-        rewrite: (path) => path.replace(/^\/api/, '/bus/web_awesomed'),
-        changeOrigin: true,
-      },
-    },
-    hmr: { overlay: true },
   },
   plugins: [
     vue(),
