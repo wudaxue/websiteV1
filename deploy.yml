@@ -1,0 +1,12 @@
+- name: web_station
+  product: gongyi
+  modules:
+    - name: web_station
+      type: web
+      path:
+        - src: dist
+          dst: /
+          repl:
+            - var: "{{ domain_awesomed }}"
+              repl: "__domain_awesomed__"
+              filter: assets/.*js
