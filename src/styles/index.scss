@@ -22,3 +22,24 @@ html {
   margin: 0;
 }
 
+.app-box {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background: url(@/assets/bg.jpg) center center no-repeat;
+  background-size: cover;
+}
+.app-wrapper {
+  width: 1400px;
+}
+
+.el-rate .el-rate__icon.is-active {
+  color: #01E1F1 !important;
+  font-size: 20px !important;
+}
+
+.el-rate .el-rate__icon {
+  font-size: 20px !important;
+  border-color: #01E1F1 !important;
+  margin-right: 5px !important;
+}
