@@ -43,3 +43,9 @@ html {
   border-color: #01E1F1 !important;
   margin-right: 5px !important;
 }
+
+@layer components {
+  .flex-xy-center {
+    @apply flex justify-center items-center;
+  }
+}

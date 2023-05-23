@@ -1,58 +1,26 @@
 <script setup lang="ts">
-import { tab } from './const/index'
+import { tab, MessageItem } from './const/index'
+import Message from './Message.vue'
 
+const questionMess = ref('')
+const messages = ref<MessageItem[]>([])
 const tabList = ref(tab)
 const activeTab = ref(0)
 
-const changeTab = (item: { value: number }) => {
-  activeTab.value = item.value
+const changeTab = (item: { value: number }) => (activeTab.value = item.value)
+
+const sendMessage = () => {
+  let messageLen = messages.value.length
+  messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messageLen++ })
+  questionMess.value = ''
 }
 
-const questionMess = ref('')
-
-const messageList = ref([
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message: '什么叫意难平啊？',
-    from: 'me',
-    rate: null,
-  },
-  {
-    message:
-      '意难平，出自宋朝孙应时的《阻风泊归舟游净众寺》：“愁边动寒角，夜久意难平”，现演变成一个网络流行语，多指不能释怀、放不下，不甘心的感觉，念念不忘却没有回响。常常被用于形容令人遗憾惋惜的cp，渐渐沦为了一个常见的“虐梗”。',
-    from: 'you',
-    rate: null,
-  },
-])
+const changeRate = (message: MessageItem) => {
+  messages.value = messages.value.map((item) => ({
+    ...item,
+    rate: item.key === message.key ? message.rate : item.rate,
+  }))
+}
 </script>
 
 <template>
@@ -65,7 +33,7 @@ const messageList = ref([
             v-for="(item, index) in tabList"
             :key="index"
             :class="[
-              `h-[140] relative w-[112px] flex justify-center items-center flex-col cursor-pointer ${
+              `h-[140] relative w-[112px] flex-xy-center flex-col cursor-pointer ${
                 activeTab === item.value ? 'active-tab' : 'normal-tab'
               }`,
             ]"
@@ -77,45 +45,38 @@ const messageList = ref([
             ></div>
             <div class="mt-[14px]">{{ item.label }}</div>
           </div>
-          <div class="h-[140] relative w-[112px] flex justify-center items-center flex-col ml-[-25px] cursor-pointer">
+          <div class="h-[140] relative w-[112px] flex-xy-center flex-col ml-[-25px] cursor-pointer">
             <img src="@/assets/more-tab.png" class="h-[140px]" alt="" />
             <img src="@/assets/next.png" alt="" class="absolute top-[70px] mx-auto w-[9px]" />
           </div>
         </div>
         <div class="mt-[40px] flex">
           <div
-            class="w-[120px] h-[40px] rounded-3xl bg-gradient-to-b from-[#00FFF0] to-[#028FF2] flex justify-center items-center cursor-pointer"
+            class="w-[120px] h-[40px] rounded-3xl bg-gradient-to-b from-[#00FFF0] to-[#028FF2] flex-xy-center cursor-pointer"
           >
             解忧
           </div>
-          <div class="w-[40px] h-[40px] rounded-full bg-white ml-5 flex justify-center items-center cursor-pointer">
+          <div class="w-[40px] h-[40px] rounded-full bg-white ml-5 flex-xy-center cursor-pointer">
             <img src="@/assets/plus.png" class="w-[14px]" alt="" />
           </div>
         </div>
       </div>
-      <div class="relative chatbox mt-[30px] overflow-hidden w-full pt-[48px] overflow-y-auto">
-        <div class="px-[48px]">
-          <div class="message-box">
-            <div v-for="(item, index) in messageList" :key="index" class="flex items-center mb-[30px]">
-              <div>
-                <!--  -->
-                <div
-                  :class="[
-                    `w-[60px] h-[60px] rounded-full mr-[22px]  border-2 border-[#00FFF0] bg-cover ${
-                      item.from === 'me' ? 'bg-white' : 'bg-[url(@/assets/user-logo.png)]'
-                    }`,
-                  ]"
-                ></div>
-              </div>
-              <div class="flex-auto">{{ item.message }}</div>
-              <el-rate v-model="item.rate" class="ml-[20px]" void-color="#00FFF0" />
-            </div>
-          </div>
-        </div>
+      <div class="relative chatbox mt-[30px] overflow-hidden w-full">
+        <Message :list="messages" @change-rate="changeRate"></Message>
         <div class="sticky bottom-0 z-10 input-box">
           <div class="relative">
-            <el-input v-model="questionMess" class="question" size="small" placeholder="输入..." />
-            <img src="@/assets/telegram.svg" alt="" class="absolute right-[40px] top-[25px] w-[30px] cursor-pointer" />
+            <el-input
+              v-model="questionMess"
+              class="question"
+              size="small"
+              placeholder="输入..."
+              @keyup.enter="sendMessage"
+            />
+            <img
+              src="@/assets/telegram.svg"
+              class="absolute right-[40px] top-[25px] w-[30px] cursor-pointer"
+              @click="sendMessage"
+            />
           </div>
         </div>
       </div>
@@ -138,7 +99,7 @@ const messageList = ref([
   border: 4px solid;
   border-color: #00fff0;
   border-left: 4px solid linear-gradient(to bottom, #028ff2, #00fff0);
-  height: calc(100vh - 76px - 140px - 30px - 40px - 40px - 30px - 60px);
+  height: calc(100vh - 76px - 140px - 30px - 40px - 30px - 60px);
 }
 .question {
   border-radius: 16px !important;
@@ -157,5 +118,13 @@ const messageList = ref([
     width: calc(100% - 96px);
     margin: auto;
   }
+}
+.message-box {
+  overflow-y: auto;
+  height: calc(100vh - 76px - 140px - 30px - 30px - 60px - 180px);
+}
+
+.message-box::-webkit-scrollbar {
+  display: none !important;
 }
 </style>

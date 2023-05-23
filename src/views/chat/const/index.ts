@@ -12,3 +12,10 @@ export const tab = [
     img: img1,
   },
 ]
+
+export interface MessageItem {
+  from: string
+  rate: number
+  message: string
+  key: number
+}
