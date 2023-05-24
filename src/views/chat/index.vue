@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { tab, MessageItem } from './const/index'
 import Message from './Message.vue'
+import { useWebSocket } from '@vueuse/core'
 
 const questionMess = ref('')
 const messages = ref<MessageItem[]>([])
 const tabList = ref(tab)
 const activeTab = ref(0)
+
+const { status, data } = useWebSocket('ws://gongyi-test.zhcslyg.com', {
+  autoReconnect: {
+    retries: 3,
+    delay: 1000,
+    onFailed() {
+      alert('Failed to connect WebSocket after 3 retries')
+    },
+  },
+})
+
+console.log('status', status.value, 'data', data.value)
 
 const changeTab = (item: { value: number }) => (activeTab.value = item.value)
 
