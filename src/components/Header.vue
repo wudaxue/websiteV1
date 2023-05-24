@@ -35,3 +35,9 @@ const tabList = ref([
 
 const activeTab = ref('ai')
 </script>
+
+<!-- 127.0.0.1:17860/queue/join -->
+<!-- data: [null, "流输出↵", 2048, 0.7, 0.95, true]
+event_data: null
+fn_index: 0
+session_hash:"ss5pxex8q0k" -->
