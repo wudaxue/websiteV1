@@ -13,8 +13,8 @@ import eslintPlugin from 'vite-plugin-eslint'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
-  base: '/chatgpt/',
-  publicDir: '/chatgpt',
+  base: '',
+  publicDir: '',
   resolve: {
     alias: {
       '@/': `${path.resolve(__dirname, './src')}/`,

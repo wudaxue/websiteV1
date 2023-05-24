@@ -8,24 +8,39 @@ const messages = ref<MessageItem[]>([])
 const tabList = ref(tab)
 const activeTab = ref(0)
 
-const { status, data } = useWebSocket('ws://gongyi-test.zhcslyg.com', {
-  autoReconnect: {
-    retries: 3,
-    delay: 1000,
-    onFailed() {
-      alert('Failed to connect WebSocket after 3 retries')
-    },
-  },
-})
-
-console.log('status', status.value, 'data', data.value)
-
 const changeTab = (item: { value: number }) => (activeTab.value = item.value)
 
 const sendMessage = () => {
-  let messageLen = messages.value.length
-  messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messageLen++ })
-  questionMess.value = ''
+  // let messageLen = messages.value.length
+  // questionMess.value = ''
+  const { send, status } = useWebSocket('ws://localhost:17860/queue/join', {
+    heartbeat: true,
+    onMessage: (_, event) => {
+      console.log('event', event)
+      const data = JSON.parse(event.data)
+      console.log(data, 34634)
+      if (status.value === 'CLOSED') {
+        // console.log(event.data, 'eeee')
+        // console.log('status', status.value)
+      }
+      // messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messageLen++ })
+    },
+  })
+
+  send(
+    JSON.stringify({
+      fn_index: 0,
+      session_hash: 'nbyeu30963',
+    }),
+  )
+  send(
+    JSON.stringify({
+      fn_index: 0,
+      data: [null, questionMess.value, 2048, 0.7, 0.95, true],
+      event_data: null,
+      session_hash: 'nbyeu30963',
+    }),
+  )
 }
 
 const changeRate = (message: MessageItem) => {
