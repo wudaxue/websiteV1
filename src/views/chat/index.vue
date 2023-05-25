@@ -2,7 +2,9 @@
 import { tab, MessageItem } from './const/index'
 import Message from './Message.vue'
 import { useWebSocket } from '@vueuse/core'
+import { useRoute } from 'vue-router'
 
+const router = useRoute()
 const questionMess = ref('')
 const messages = ref<unknown[]>([])
 const messageMap = ref<any>({})
@@ -64,7 +66,7 @@ const sendMessage = () => {
   send(
     JSON.stringify({
       fn_index: 0,
-      session_hash: 'o3nuzcv66dp',
+      session_hash: router.query.session_hash || 'o3nuzcv66dp',
     }),
   )
   send(
@@ -72,7 +74,7 @@ const sendMessage = () => {
       fn_index: 0,
       data: [null, questionMess.value, 2048, 0.7, 0.95, true],
       event_data: null,
-      session_hash: 'o3nuzcv66dp',
+      session_hash: router.query.session_hash || 'o3nuzcv66dp',
     }),
   )
 }
