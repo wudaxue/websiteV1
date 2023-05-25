@@ -10,15 +10,24 @@ const tabList = ref(tab)
 const activeTab = ref(0)
 const loading = ref(false)
 
+onMounted(() => {
+  if (!localStorage.getItem('curSession')) return
+  const sessionMap = JSON.parse(localStorage.getItem('curSession') || '')
+  messageMap.value = sessionMap
+  messages.value = Object.values(sessionMap)
+})
+
 const changeTab = (item: { value: number }) => (activeTab.value = item.value)
 
 const sendMessage = () => {
-  messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messages.value.length++ })
-  messageMap.value[messages.value.length++] = {
+  const myKey = messages.value.length++
+  const userKey = myKey + 1
+  messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: myKey })
+  messageMap.value[myKey] = {
     from: 'me',
     rate: 0,
     message: questionMess.value,
-    key: messages.value.length++,
+    key: myKey,
   }
   if (loading.value) return
   questionMess.value = ''
@@ -29,24 +38,25 @@ const sendMessage = () => {
       const data = JSON.parse(event.data)
       if (data.msg === 'process_generating') {
         const outList = data.output.data[0][data.output.data[0].length - 1]
-        messageMap.value[messages.value.length++] = {
+        messageMap.value[userKey] = {
           from: 'user',
           rate: 0,
           message: outList[1],
-          key: messages.value.length++,
+          key: userKey,
         }
-        if (messageMap.value[messages.value.length++]) {
-          messageMap.value[messages.value.length++] = {
+        if (messageMap.value[userKey]) {
+          messageMap.value[userKey] = {
             from: 'user',
             rate: 0,
             message: outList[1],
-            key: messages.value.length++,
+            key: userKey,
           }
         }
       }
       if (data.msg === 'process_completed') {
         messages.value.push(Object.values(messageMap.value))
         loading.value = false
+        localStorage.setItem('curSession', JSON.stringify(messageMap.value))
       }
     },
   })
@@ -72,6 +82,7 @@ const changeRate = (message: MessageItem) => {
     ...messageMap.value[message.key],
     rate: message.rate,
   }
+  localStorage.setItem('curSession', JSON.stringify(messageMap.value))
 }
 </script>
 
