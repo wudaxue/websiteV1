@@ -14,7 +14,12 @@ const changeTab = (item: { value: number }) => (activeTab.value = item.value)
 
 const sendMessage = () => {
   messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messages.value.length++ })
-  messageMap.value[messages.value.length++] =  { from: 'me', rate: 0, message: questionMess.value, key: messages.value.length++ }
+  messageMap.value[messages.value.length++] = {
+    from: 'me',
+    rate: 0,
+    message: questionMess.value,
+    key: messages.value.length++,
+  }
   if (loading.value) return
   questionMess.value = ''
   const { send } = useWebSocket('ws://localhost:17860/queue/join', {
@@ -24,9 +29,19 @@ const sendMessage = () => {
       const data = JSON.parse(event.data)
       if (data.msg === 'process_generating') {
         const outList = data.output.data[0][data.output.data[0].length - 1]
-        messageMap.value[messages.value.length++] =  { from: 'user', rate: 0, message: outList[1], key: messages.value.length++ }
+        messageMap.value[messages.value.length++] = {
+          from: 'user',
+          rate: 0,
+          message: outList[1],
+          key: messages.value.length++,
+        }
         if (messageMap.value[messages.value.length++]) {
-          messageMap.value[messages.value.length++] =  { from: 'user', rate: 0, message: outList[1], key: messages.value.length++ }
+          messageMap.value[messages.value.length++] = {
+            from: 'user',
+            rate: 0,
+            message: outList[1],
+            key: messages.value.length++,
+          }
         }
       }
       if (data.msg === 'process_completed') {
@@ -56,7 +71,6 @@ const changeRate = (message: MessageItem) => {
   messageMap.value[message.key] = {
     ...messageMap.value[message.key],
     rate: message.rate,
-
   }
 }
 </script>

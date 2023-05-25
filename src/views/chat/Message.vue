@@ -7,7 +7,7 @@ const emits = defineEmits(['change-rate'])
 const props = defineProps({
   messageMap: {
     type: Object,
-    default: () => {},
+    default: () => ({}),
   },
 })
 watch(
