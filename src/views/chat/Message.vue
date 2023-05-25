@@ -5,17 +5,19 @@ const messageEle = ref<HTMLDivElement | null>(null)
 const emits = defineEmits(['change-rate'])
 
 const props = defineProps({
-  list: {
-    type: Array as any,
-    default: () => [],
+  messageMap: {
+    type: Object,
+    default: () => {},
   },
 })
 watch(
-  () => props.list.length,
+  () => props.messageMap,
   () => scrollToBottom(),
 )
 
-onMounted(() => scrollToBottom())
+onMounted(() => {
+  scrollToBottom()
+})
 
 const scrollToBottom = async () => {
   await nextTick()
@@ -28,7 +30,7 @@ const changeRate = (item: MessageItem) => emits('change-rate', item)
 
 <template>
   <div ref="messageEle" class="message-box px-[48px] pt-[48px]">
-    <div v-for="(item, index) in props.list" :key="index" class="flex items-center mb-[30px]">
+    <div v-for="(item, index) in Object.values(props.messageMap)" :key="index" class="flex items-center mb-[30px]">
       <div>
         <div
           :class="[

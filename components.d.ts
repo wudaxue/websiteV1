@@ -48,4 +48,7 @@ declare module '@vue/runtime-core' {
     UploadHelper: typeof import('./src/components/UploadFile/uploadHelper.vue')['default']
     UploadImage: typeof import('./src/components/UploadImage/index.vue')['default']
   }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
+  }
 }

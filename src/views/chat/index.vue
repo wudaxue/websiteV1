@@ -4,33 +4,42 @@ import Message from './Message.vue'
 import { useWebSocket } from '@vueuse/core'
 
 const questionMess = ref('')
-const messages = ref<MessageItem[]>([])
+const messages = ref<unknown[]>([])
+const messageMap = ref<any>({})
 const tabList = ref(tab)
 const activeTab = ref(0)
+const loading = ref(false)
 
 const changeTab = (item: { value: number }) => (activeTab.value = item.value)
 
 const sendMessage = () => {
-  // let messageLen = messages.value.length
-  // questionMess.value = ''
-  const { send, status } = useWebSocket('ws://localhost:17860/queue/join', {
+  messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messages.value.length++ })
+  messageMap.value[messages.value.length++] =  { from: 'me', rate: 0, message: questionMess.value, key: messages.value.length++ }
+  if (loading.value) return
+  questionMess.value = ''
+  const { send } = useWebSocket('ws://localhost:17860/queue/join', {
     heartbeat: true,
     onMessage: (_, event) => {
-      console.log('event', event)
+      loading.value = true
       const data = JSON.parse(event.data)
-      console.log(data, 34634)
-      if (status.value === 'CLOSED') {
-        // console.log(event.data, 'eeee')
-        // console.log('status', status.value)
+      if (data.msg === 'process_generating') {
+        const outList = data.output.data[0][data.output.data[0].length - 1]
+        messageMap.value[messages.value.length++] =  { from: 'user', rate: 0, message: outList[1], key: messages.value.length++ }
+        if (messageMap.value[messages.value.length++]) {
+          messageMap.value[messages.value.length++] =  { from: 'user', rate: 0, message: outList[1], key: messages.value.length++ }
+        }
       }
-      // messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: messageLen++ })
+      if (data.msg === 'process_completed') {
+        messages.value.push(Object.values(messageMap.value))
+        loading.value = false
+      }
     },
   })
 
   send(
     JSON.stringify({
       fn_index: 0,
-      session_hash: 'nbyeu30963',
+      session_hash: 'o3nuzcv66dp',
     }),
   )
   send(
@@ -38,16 +47,17 @@ const sendMessage = () => {
       fn_index: 0,
       data: [null, questionMess.value, 2048, 0.7, 0.95, true],
       event_data: null,
-      session_hash: 'nbyeu30963',
+      session_hash: 'o3nuzcv66dp',
     }),
   )
 }
 
 const changeRate = (message: MessageItem) => {
-  messages.value = messages.value.map((item) => ({
-    ...item,
-    rate: item.key === message.key ? message.rate : item.rate,
-  }))
+  messageMap.value[message.key] = {
+    ...messageMap.value[message.key],
+    rate: message.rate,
+
+  }
 }
 </script>
 
@@ -90,7 +100,7 @@ const changeRate = (message: MessageItem) => {
         </div>
       </div>
       <div class="relative chatbox mt-[30px] overflow-hidden w-full">
-        <Message :list="messages" @change-rate="changeRate"></Message>
+        <Message :message-map="messageMap" @change-rate="changeRate"></Message>
         <div class="sticky bottom-0 z-10 input-box">
           <div class="relative">
             <el-input
@@ -101,6 +111,7 @@ const changeRate = (message: MessageItem) => {
               @keyup.enter="sendMessage"
             />
             <img
+              v-if="!loading"
               src="@/assets/telegram.svg"
               class="absolute right-[40px] top-[25px] w-[30px] cursor-pointer"
               @click="sendMessage"
