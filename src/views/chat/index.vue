@@ -3,6 +3,8 @@ import { tab, MessageItem } from './const/index'
 import Message from './Message.vue'
 import { useWebSocket } from '@vueuse/core'
 import { useRoute } from 'vue-router'
+import { saveAs } from 'file-saver'
+import { dateTimeFormat } from '@/utils/moment'
 
 const router = useRoute()
 const questionMess = ref('')
@@ -22,7 +24,7 @@ onMounted(() => {
 const changeTab = (item: { value: number }) => (activeTab.value = item.value)
 
 const sendMessage = () => {
-  const myKey = messages.value.length++
+  const myKey = messages.value.length
   const userKey = myKey + 1
   messages.value.push({ from: 'me', rate: 0, message: questionMess.value, key: myKey })
   messageMap.value[myKey] = {
@@ -79,6 +81,11 @@ const sendMessage = () => {
   )
 }
 
+const downloadMessage = () => {
+  const blob = new Blob([JSON.stringify(messages.value)], { type: 'text/plain;charset=utf-8' })
+  saveAs(blob, `${dateTimeFormat(new Date().getTime(), true)}.json`)
+}
+
 const changeRate = (message: MessageItem) => {
   messageMap.value[message.key] = {
     ...messageMap.value[message.key],
@@ -91,7 +98,7 @@ const changeRate = (message: MessageItem) => {
 <template>
   <div class="app-box flex justify-center text-white">
     <div class="app-wrapper">
-      <Header></Header>
+      <Header @download-message="downloadMessage"></Header>
       <div class="container mt-[30px]">
         <div class="tab grid grid-cols-10 gap-x-5 gap-y-6">
           <div

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { MessageItem } from './const/index'
 
-const messageEle = ref<HTMLDivElement | null>(null)
+const messageBottom = ref<HTMLDivElement | null>(null)
 const emits = defineEmits(['change-rate'])
 
 const props = defineProps({
@@ -11,7 +11,7 @@ const props = defineProps({
   },
 })
 watch(
-  () => props.messageMap,
+  () => Object.values(props.messageMap).length,
   () => scrollToBottom(),
 )
 
@@ -21,8 +21,8 @@ onMounted(() => {
 
 const scrollToBottom = async () => {
   await nextTick()
-  if (!messageEle.value) return
-  messageEle.value.scrollTo({ top: messageEle.value.offsetHeight }) // scroll to bottom
+  if (!messageBottom.value) return
+  messageBottom.value.scrollIntoView() // scroll to bottom
 }
 
 const changeRate = (item: MessageItem) => emits('change-rate', item)
@@ -43,5 +43,6 @@ const changeRate = (item: MessageItem) => emits('change-rate', item)
       <div class="flex-auto">{{ item.message }}</div>
       <el-rate v-model="item.rate" class="ml-[20px]" void-color="#00FFF0" @change="changeRate(item)" />
     </div>
+    <div ref="messageBottom"></div>
   </div>
 </template>

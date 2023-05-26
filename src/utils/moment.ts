@@ -1,4 +1,4 @@
-export function dateTimeFormat(time: number | string): string {
+export function dateTimeFormat(time: number | string, isZh: boolean): string {
   if (!time) return ''
   const t = parseDate(time)
   if (!t) return ''
@@ -7,7 +7,9 @@ export function dateTimeFormat(time: number | string): string {
   const hour = timePad(t.getHours())
   const minute = timePad(t.getMinutes())
   const second = timePad(t.getSeconds())
-  return `${t.getFullYear()}-${month}-${date} ${hour}:${minute}:${second}`
+  return isZh
+    ? `${t.getFullYear()}年${month}月${date}日${hour}时${minute}分${second}秒`
+    : `${t.getFullYear()}-${month}-${date} ${hour}:${minute}:${second}`
 }
 
 export function dateFormat(time: number | string): string {

@@ -13,6 +13,7 @@
     "@vueuse/core": "^9.6.0",
     "axios": "^0.26.1",
     "element-plus": "^2.2.27",
+    "file-saver": "^2.0.5",
     "js-cookie": "^3.0.1",
     "lodash.debounce": "^4.0.8",
     "path-browserify": "^1.0.1",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@iconify-json/ep": "^1.1.8",
+    "@types/file-saver": "^2.0.5",
     "@types/js-cookie": "^3.0.2",
     "@types/node": "^17.0.45",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
